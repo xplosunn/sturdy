@@ -13,6 +13,14 @@ const maxAttempts = 100
 func SturdyTest(
 	t *testing.T,
 	b behaviour.Behaviour,
+	testCode func(ctx context.Context) error,
+) {
+	SturdyTestProperty(t, b, PropertyNone, testCode)
+}
+
+func SturdyTestProperty(
+	t *testing.T,
+	b behaviour.Behaviour,
 	propertyCheck func(t *testing.T),
 	testCode func(ctx context.Context) error,
 ) {

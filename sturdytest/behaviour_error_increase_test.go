@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/xplosunn/sturdy/behaviour"
-	s "github.com/xplosunn/sturdy/short"
+	s "github.com/xplosunn/sturdy/shortsyntax"
 	"github.com/xplosunn/sturdy/sturdytest"
 	"testing"
 )

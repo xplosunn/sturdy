@@ -3,7 +3,7 @@ package sturdytest_test
 import (
 	"context"
 	"github.com/stretchr/testify/assert"
-	s "github.com/xplosunn/sturdy/short"
+	s "github.com/xplosunn/sturdy/shortsyntax"
 	"github.com/xplosunn/sturdy/sturdytest"
 	"testing"
 )
@@ -13,7 +13,7 @@ func TestSturdyTestPropertyAfterCall(t *testing.T) {
 	moneyOnBobAccount := 0
 	totalMoneyOnBankPropertyFailed := false
 	var totalMoneyOnBankWhenPropertyFailed int
-	sturdytest.SturdyTest(t, sturdytest.ErrorConstAfterCall(), func(t *testing.T) {
+	sturdytest.SturdyTestProperty(t, sturdytest.ErrorConstAfterCall(), func(t *testing.T) {
 		totalMoneyOnBank := moneyOnAliceAccount + moneyOnBobAccount
 		if totalMoneyOnBank != 100 {
 			totalMoneyOnBankPropertyFailed = true
@@ -46,10 +46,10 @@ func TestSturdyTestPropertyAfterCall(t *testing.T) {
 	assert.Equal(t, 0, totalMoneyOnBankWhenPropertyFailed)
 }
 
-func TestSturdyTestPropertyEventualSuccess(t *testing.T) {
+func TestSturdyTestEventualSuccess(t *testing.T) {
 	var err error
 	errCount := 0
-	sturdytest.SturdyTest(t, sturdytest.ErrorIncreaseAfterCall(), sturdytest.PropertyNone, func(ctx context.Context) error {
+	sturdytest.SturdyTest(t, sturdytest.ErrorIncreaseAfterCall(), func(ctx context.Context) error {
 		err = s.S0(ctx, func() error {
 			return nil
 		})

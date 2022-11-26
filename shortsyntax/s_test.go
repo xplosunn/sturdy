@@ -6,7 +6,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/xplosunn/sturdy/behaviour"
-	s "github.com/xplosunn/sturdy/short"
+	s "github.com/xplosunn/sturdy/shortsyntax"
 	"testing"
 )
 
