@@ -19,9 +19,10 @@ func ErrorIncreaseAfterCall() behaviour.Behaviour {
 }
 
 type increasinglyErroring struct {
-	BeforeCall   bool
-	FailAt       int
-	FailureCount int
+	BeforeCall      bool
+	FailAt          int
+	FailureCount    int
+	NonInjectedErrs []error
 }
 
 func (i *increasinglyErroring) BeforeInvocation() error {
@@ -49,7 +50,11 @@ func (i *increasinglyErroring) AfterSuccessfulInvocation() error {
 }
 
 func (i *increasinglyErroring) NonInjectedError(err error) {
+	i.NonInjectedErrs = append(i.NonInjectedErrs, err)
+}
 
+func (i *increasinglyErroring) NonInjectedErrors() []error {
+	return i.NonInjectedErrs
 }
 
 func ErrorBeforeFirstCallAndThenIncreaseAfterEachCall() behaviour.Behaviour {
@@ -64,6 +69,7 @@ type beforeFirstCallAndThenIncreaseAfterEachCallErroring struct {
 	HasErroredBeforeFirstCall bool
 	FailAt                    int
 	FailureCount              int
+	NonInjectedErrs           []error
 }
 
 func (b *beforeFirstCallAndThenIncreaseAfterEachCallErroring) BeforeInvocation() error {
@@ -85,5 +91,9 @@ func (b *beforeFirstCallAndThenIncreaseAfterEachCallErroring) AfterSuccessfulInv
 }
 
 func (b *beforeFirstCallAndThenIncreaseAfterEachCallErroring) NonInjectedError(err error) {
+	b.NonInjectedErrs = append(b.NonInjectedErrs, err)
+}
 
+func (b *beforeFirstCallAndThenIncreaseAfterEachCallErroring) NonInjectedErrors() []error {
+	return b.NonInjectedErrs
 }

@@ -29,3 +29,7 @@ func (s SampleBehaviour) AfterSuccessfulInvocation() error {
 func (s SampleBehaviour) NonInjectedError(err error) {
 	panic("implement me")
 }
+
+func (s SampleBehaviour) NonInjectedErrors() []error {
+	panic("implement me")
+}

@@ -40,6 +40,10 @@ func (b *BeforeInvocationConstErr) NonInjectedError(err error) {
 	panic("unexpected call to BeforeInvocationConstErr.NonInjectedError")
 }
 
+func (b *BeforeInvocationConstErr) NonInjectedErrors() []error {
+	panic("unexpected call to BeforeInvocationConstErr.NonInjectedErrors")
+}
+
 func TestBeforeInvocationConstErr(t *testing.T) {
 	ctx := behaviour.WithBehaviour(context.Background(), &BeforeInvocationConstErr{})
 
@@ -53,7 +57,7 @@ func TestBeforeInvocationConstErr(t *testing.T) {
 }
 
 type AfterInvocationConstErr struct {
-	NonInjectedErr error
+	NonInjectedErrs []error
 }
 
 func (b *AfterInvocationConstErr) BeforeInvocation() error {
@@ -65,7 +69,11 @@ func (b *AfterInvocationConstErr) AfterSuccessfulInvocation() error {
 }
 
 func (b *AfterInvocationConstErr) NonInjectedError(err error) {
-	b.NonInjectedErr = err
+	b.NonInjectedErrs = append(b.NonInjectedErrs, err)
+}
+
+func (b *AfterInvocationConstErr) NonInjectedErrors() []error {
+	return b.NonInjectedErrs
 }
 
 func TestAfterInvocationConstErr(t *testing.T) {
@@ -79,7 +87,7 @@ func TestAfterInvocationConstErr(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Zero(t, actual)
 	assert.Equal(t, expected, err.Error())
-	assert.Nil(t, b.NonInjectedErr)
+	assert.Nil(t, b.NonInjectedErrs)
 
 	expected = "non injected err"
 	actual, err = s.S1(ctx, func() (string, error) {
@@ -88,5 +96,17 @@ func TestAfterInvocationConstErr(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Zero(t, actual)
 	assert.Equal(t, expected, err.Error())
-	assert.Equal(t, expected, b.NonInjectedErr.Error())
+	assert.Len(t, b.NonInjectedErrors(), 1)
+	assert.Equal(t, expected, b.NonInjectedErrors()[0].Error())
+
+	expected2 := "non injected err 2"
+	actual, err = s.S1(ctx, func() (string, error) {
+		return "", errors.New("non injected err 2")
+	})
+	assert.NotNil(t, err)
+	assert.Zero(t, actual)
+	assert.Equal(t, expected2, err.Error())
+	assert.Len(t, b.NonInjectedErrors(), 2)
+	assert.Equal(t, expected, b.NonInjectedErrors()[0].Error())
+	assert.Equal(t, expected2, b.NonInjectedErrors()[1].Error())
 }

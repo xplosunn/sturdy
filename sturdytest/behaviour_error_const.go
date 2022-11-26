@@ -15,7 +15,8 @@ func ErrorConstAfterCall() behaviour.Behaviour {
 }
 
 type errorConst struct {
-	BeforeCall bool
+	BeforeCall      bool
+	NonInjectedErrs []error
 }
 
 func (errC errorConst) BeforeInvocation() error {
@@ -33,5 +34,9 @@ func (errC errorConst) AfterSuccessfulInvocation() error {
 }
 
 func (errC errorConst) NonInjectedError(err error) {
+	errC.NonInjectedErrs = append(errC.NonInjectedErrs, err)
+}
 
+func (errC errorConst) NonInjectedErrors() []error {
+	return errC.NonInjectedErrs
 }
